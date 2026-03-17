@@ -89,8 +89,17 @@
             <artifactId>mybatis-plus-jsqlparser</artifactId>
             <version>3.5.16</version>
         </dependency>
-
-
+<!--        langchain4j需要引入2个配置-->
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-open-ai</artifactId>
+            <version>1.12.2</version>
+        </dependency>
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-open-ai-spring-boot-starter</artifactId>
+            <version>1.12.2-beta22</version>
+        </dependency>
     </dependencies>
 <!--    <dependencyManagement>-->
 <!--        <dependencies>-->

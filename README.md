@@ -10,7 +10,7 @@
 [![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://openjdk.java.net/)
 [![MyBatis Plus](https://img.shields.io/badge/MyBatis%20Plus-3.5.16-blue.svg)](https://baomidou.com/)
 [![Vue](https://img.shields.io/badge/Vue-3.x-brightgreen.svg)](https://vuejs.org/)
-[![LangChain4j](https://img.shields.io/badge/LangChain4j-Latest-purple.svg)](https://github.com/langchain4j/langchain4j)
+[![LangChain4j](https://img.shields.io/badge/LangChain4j-1.12.2-purple.svg)](https://github.com/langchain4j/langchain4j)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 </div>
@@ -21,9 +21,9 @@
 
 **NGS AI Code Mother** 是一套以 **AI 开发实战 + 后端架构设计** 为核心的企业级项目。
 
-本项目基于 **Spring Boot 3** + **LangChain4j** + **Vue 3** 技术栈开发，对标大厂标准，致力于打造专业的 **企业级 AI 代码生成平台**。
+本项目基于 **Spring Boot 3** + **LangChain4j** + **Vue 3** 技术栈开发，致力于打造专业的 ** AI 代码生成平台**。
 
-> 💡 **当前状态**: 后端核心功能已实现，前端开发中...
+> 💡 **当前状态**: 后端用户模块已实现，前端开发中...
 
 ## ✨ 核心特性
 
@@ -43,7 +43,7 @@
 | Java | 21     | 开发语言 |
 | MyBatis Plus | 3.5.16 | ORM 框架 |
 | MySQL | 8.0+   | 数据库 |
-| LangChain4j | Latest | AI 大模型集成框架 |
+| LangChain4j | 1.12.2 | AI 大模型集成框架 |
 
 ### 前端技术（开发中）
 
