@@ -6,9 +6,9 @@
 
 基于 Spring Boot 3 + LangChain4j + Vue 3 开发，对标大厂的企业级 AI 代码生成平台
 
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-green.svg)](https://spring.io/projects/spring-boot)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.12-green.svg)](https://spring.io/projects/spring-boot)
 [![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://openjdk.java.net/)
-[![MyBatis Plus](https://img.shields.io/badge/MyBatis%20Plus-3.x-blue.svg)](https://baomidou.com/)
+[![MyBatis Plus](https://img.shields.io/badge/MyBatis%20Plus-3.5.16-blue.svg)](https://baomidou.com/)
 [![Vue](https://img.shields.io/badge/Vue-3.x-brightgreen.svg)](https://vuejs.org/)
 [![LangChain4j](https://img.shields.io/badge/LangChain4j-Latest-purple.svg)](https://github.com/langchain4j/langchain4j)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
@@ -85,7 +85,7 @@ ngs-ai-code-mother/
 ### 环境要求
 
 - JDK 21+
-- Maven 3.6+
+- Maven 3.8+
 - MySQL 8.0+
 - Node.js 24+ (前端开发)
 
@@ -137,7 +137,6 @@ ngs-ai-code-mother/
 - [x] 全局异常处理
 - [x] 跨域配置
 - [x] MyBatis Plus 集成
-- [x] 健康检查接口
 
 ### 开发中 🚧
 
