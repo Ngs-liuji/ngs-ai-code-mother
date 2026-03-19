@@ -5,7 +5,7 @@ langchain4j:
       model-name: "qwen3.5-plus"
       api-key: ${DASHSCOPE_API_KEY}
       base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
-      max-tokens: 32768
+      max-tokens: 8192
       #json 格式输出配置
       response_format: json_object
       #开启日志
@@ -19,4 +19,6 @@ langchain4j:
       base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
       log-response: true
       log-request: true
-      max-tokens: 131072
+      max-tokens: 8192
+      # 超时配置（秒）
+      duration: PT180S

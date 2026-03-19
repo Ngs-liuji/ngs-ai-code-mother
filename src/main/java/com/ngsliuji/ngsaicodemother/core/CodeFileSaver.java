@@ -16,7 +16,7 @@ public class CodeFileSaver {
     /**
      * 临时文件保存路径
      */
-    public static final String ROOT_PATH = System.getProperty("user.dir") + "/tmp/code_output/";
+    public static final String ROOT_PATH = System.getProperty("user.dir") + "/tmp/code_output";
 
 
     /**
@@ -37,6 +37,7 @@ public class CodeFileSaver {
      */
     public static File saveMultiFileCodeResult(MultiFileCodeResult MultiFileCodeResult) {
         String baseDirPath = buildUniquePath(CodeGenTypeEnum.MULTI_FILE.getValue());
+        //保存html代码
         writeToFile(baseDirPath, "index.html", MultiFileCodeResult.getHtmlCode());
         writeToFile(baseDirPath, "style.css", MultiFileCodeResult.getCssCode());
         writeToFile(baseDirPath, "script.js", MultiFileCodeResult.getJsCode());
@@ -65,11 +66,11 @@ public class CodeFileSaver {
      */
     public static void writeToFile(String dir,String fileName, String content) {
         //File.separator 适配各个系统的路径分隔符,File在java的io包下
-        String filrPath = ROOT_PATH + dir + File.separator + fileName;
-        //创建并写入文件，使用hutool工具库;StandardCharsets.UTF_8 是个编码枚举类，在java nio.charset包下
-        FileUtil.writeString(content, filrPath, StandardCharsets.UTF_8);
+        String filePath =  dir + File.separator + fileName;
+        //创建并写入文件，使用hutool工具库;StandardCharsets.UTF_8 是一个编码枚举类，在java nio.charset包下
+        FileUtil.writeString(content, filePath, StandardCharsets.UTF_8);
 
-//        System.out.println("保存文件成功：" + filrPath);
+        System.out.println("保存文件成功：" + filePath);
 
     }
 }

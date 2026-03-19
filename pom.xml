@@ -105,7 +105,7 @@
             <artifactId>langchain4j-open-ai-spring-boot-starter</artifactId>
             <version>1.12.2-beta22</version>
         </dependency>
-<!--        引入reactor，以更好的支持流失输出-->
+<!--        引入reactor，以更好的支持流失输出，Reactor 是指响应式编程-->
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-reactor</artifactId>

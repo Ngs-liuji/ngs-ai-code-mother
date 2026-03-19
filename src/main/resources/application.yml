@@ -10,6 +10,12 @@ spring:
     timeout: 86400
   profiles:
     active: local
+  # Spring Boot HTTP 客户端配置
+  http:
+    client:
+      connect-timeout: 30s
+      read-timeout: 180s
+      write-timeout: 180s
 server:
   port: 8123
   servlet:
