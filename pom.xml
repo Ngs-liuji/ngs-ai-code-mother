@@ -57,26 +57,26 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-<!--        Hutool 是主流的 Java 工具类库，集合了丰富的工具类，涵盖字符串处理、日期操作、文件处理、加解密、反射、正则匹配等常见功能。它的轻量化和无侵入性让开发者能够专注于业务逻辑而不必编写重复的工具代码。例如，DateUtil.formatDate(new Date()) 可以快速将当前日期格式化为字符串。-->
+        <!--        hutool 是主流的 Java 工具类库，集合了丰富的工具类，涵盖字符串处理、日期操作、文件处理、加解密、反射、正则匹配等常见功能。它的轻量化和无侵入性让开发者能够专注于业务逻辑而不必编写重复的工具代码。例如，DateUtil.formatDate(new Date()) 可以快速将当前日期格式化为字符串。-->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.8.38</version>
+            <version>5.8.40</version>
         </dependency>
-<!--        Knife4j 是基于Swagger 接口文档的增强工具，提供了更加友好的؜؜؜ API 文档界面和功能扩展，例如动态参数调试、分؜؜组文؜档等。它适合用于 Spring Boot 项目中，能够通过简单的配置自动生成接口文档，让开发者和前端快速了解和调试接口，提高协作效率。-->
+        <!--        Knife4j 是基于Swagger 接口文档的增强工具，提供了更加友好的؜؜؜ API 文档界面和功能扩展，例如动态参数调试、分؜؜组文؜档等。它适合用于 Spring Boot 项目中，能够通过简单的配置自动生成接口文档，让开发者和前端快速了解和调试接口，提高协作效率。-->
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
             <version>4.4.0</version>
         </dependency>
-<!--        AOP 切面编程 给启动类添加注解（可选）：-->
-<!--        @EnableAspectJAutoProxy(exposeProxy = true)-->
-<!--        解释一下 exposeProxy = true 的作用：通过 Spring AOP 提供对当前代理对象的访问，使得可以在业务逻辑中访问到当前的代理对象。你可以在方法执行时通过 AopContext.currentProxy() 获取当前的代理对象。-->
+        <!--        AOP 切面编程 给启动类添加注解（可选）：-->
+        <!--        @EnableAspectJAutoProxy(exposeProxy = true)-->
+        <!--        解释一下 exposeProxy = true 的作用：通过 Spring AOP 提供对当前代理对象的访问，使得可以在业务逻辑中访问到当前的代理对象。你可以在方法执行时通过 AopContext.currentProxy() 获取当前的代理对象。-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
-<!--        mybatis-plus 是 MyBatis 的增强工具，旨在简化开发流程。它提供了开箱即用的 CRUD 方法、动态查询构造器、分页插件和代码生成器等功能，大幅减少重复代码，同时保持与 MyBatis 原生功能的兼容性。例如，通过调用 baseMapper.selectById(id)，可以直接查询数据库中的记录，而无需手动编写 SQL。-->
+        <!--        mybatis-plus 是 MyBatis 的增强工具，旨在简化开发流程。它提供了开箱即用的 CRUD 方法、动态查询构造器、分页插件和代码生成器等功能，大幅减少重复代码，同时保持与 MyBatis 原生功能的兼容性。例如，通过调用 baseMapper.selectById(id)，可以直接查询数据库中的记录，而无需手动编写 SQL。-->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
@@ -89,7 +89,7 @@
             <artifactId>mybatis-plus-jsqlparser</artifactId>
             <version>3.5.16</version>
         </dependency>
-<!--        langchain4j需要引入2个配置-->
+        <!--        langchain4j需要引入3个配置-->
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-open-ai</artifactId>
@@ -97,28 +97,23 @@
         </dependency>
         <dependency>
             <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j</artifactId>
+            <version>1.12.2</version>
+        </dependency>
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-open-ai-spring-boot-starter</artifactId>
             <version>1.12.2-beta22</version>
         </dependency>
+<!--        引入reactor，以更好的支持流失输出-->
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-reactor</artifactId>
+            <version>1.12.2-beta22</version>
+        </dependency>
+
     </dependencies>
-<!--    <dependencyManagement>-->
-<!--        <dependencies>-->
-<!--            <dependency>-->
-<!--                <groupId>org.springframework.boot</groupId>-->
-<!--                <artifactId>spring-boot-dependencies</artifactId>-->
-<!--                <version>${spring-boot.version}</version>-->
-<!--                <type>pom</type>-->
-<!--                <scope>import</scope>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>com.baomidou</groupId>-->
-<!--                <artifactId>mybatis-plus-bom</artifactId>-->
-<!--                <version>3.5.16</version>-->
-<!--                <type>pom</type>-->
-<!--                <scope>import</scope>-->
-<!--            </dependency>-->
-<!--        </dependencies>-->
-<!--    </dependencyManagement>-->
+
 
 
     <repositories>

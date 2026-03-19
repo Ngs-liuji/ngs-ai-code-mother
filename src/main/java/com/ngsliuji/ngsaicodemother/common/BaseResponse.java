@@ -4,11 +4,12 @@ import com.ngsliuji.ngsaicodemother.exception.ErrorCode;
 import lombok.Data;
 
 import java.io.Serializable;
-        /*一般情况下，每个后端接口都؜؜要؜返回调用码、数؜؜据、؜调用信息等，前端可以根据这些信息进行相应的处理。
 
-        我们可以封装统一的响应结果类，便于؜前端统一获取这些信息。
+/*一般情况下，每个后端接口都؜؜要؜返回调用码、数؜؜据、؜调用信息等，前端可以根据这些信息进行相应的处理。
 
-        通用响应类：*/
+我们可以封装统一的响应结果类，便于؜前端统一获取这些信息。
+
+通用响应类：*/
 @Data
 public class BaseResponse<T> implements Serializable {
 

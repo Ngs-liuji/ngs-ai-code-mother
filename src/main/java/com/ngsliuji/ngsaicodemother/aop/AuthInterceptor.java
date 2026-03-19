@@ -51,11 +51,11 @@ public class AuthInterceptor {
         }
         // 必须有该权限才通过
         UserRoleEnum userRileEnum = UserRoleEnum.getEnumByValue(loginUser.getUserRole());
-        if(userRileEnum == null){
+        if (userRileEnum == null) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         //要求必须有管理员权限
-        if(UserRoleEnum.ADMIN.equals(userRileEnum)&& !UserRoleEnum.ADMIN.equals(mustRoleEnum)){
+        if (UserRoleEnum.ADMIN.equals(userRileEnum) && !UserRoleEnum.ADMIN.equals(mustRoleEnum)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
 

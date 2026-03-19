@@ -1,6 +1,7 @@
 package com.ngsliuji.ngsaicodemother.exception;
 
 import lombok.Getter;
+
 //枚举类可能会出现异常，没法自动生成getter，需要手动添加。枚举类没有setter方法
 @Getter
 public enum ErrorCode {

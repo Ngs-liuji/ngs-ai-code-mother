@@ -4,7 +4,6 @@ import com.ngsliuji.ngsaicodemother.common.PageRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-
 import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)//将父类属性也参与equals和hashCode的计算

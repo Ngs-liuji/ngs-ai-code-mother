@@ -8,10 +8,17 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   session:
     timeout: 86400
+  profiles:
+    active: local
 server:
   port: 8123
   servlet:
     context-path: /api
+    # 设置响应的字符编码，避免流式返回输出乱码
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false
@@ -34,16 +41,5 @@ knife4j:
   setting:
     language: zh_cn
 
-
-#langchain4j相关模型配置：
-langchain4j:
-    openai:
-      chat-modlel:
-        model-name: "qwen3.5-plus"
-        api-key: ${DASHSCOPE_API_KEY}
-        base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
-        timeout: 60000
-        log-response: true
-        log-request: true
 
 

@@ -11,9 +11,10 @@ import java.util.Date;
 
 /**
  * 对话历史
+ *
  * @TableName chat_history
  */
-@TableName(value ="chat_history")
+@TableName(value = "chat_history")
 @Data
 public class ChatHistory implements Serializable {
     /**

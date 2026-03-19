@@ -74,6 +74,7 @@ public interface UserService extends IService<User> {
 
     /**
      * 获取脱敏的用户信息
+     *
      * @param user
      * @return
      */
@@ -82,6 +83,7 @@ public interface UserService extends IService<User> {
 
     /**
      * 获取脱敏的用户信息列表
+     *
      * @param userList
      * @return
      */
@@ -90,6 +92,7 @@ public interface UserService extends IService<User> {
 
     /**
      * 获取查询条件
+     *
      * @param userQueryRequest
      * @return
      */

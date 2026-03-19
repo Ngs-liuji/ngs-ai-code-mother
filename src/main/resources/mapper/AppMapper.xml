@@ -5,19 +5,19 @@
 <mapper namespace="com.ngsliuji.ngsaicodemother.mapper.AppMapper">
 
     <resultMap id="BaseResultMap" type="com.ngsliuji.ngsaicodemother.model.entity.App">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="appName" column="appName" jdbcType="VARCHAR"/>
-            <result property="cover" column="cover" jdbcType="VARCHAR"/>
-            <result property="initPrompt" column="initPrompt" jdbcType="VARCHAR"/>
-            <result property="codeGenType" column="codeGenType" jdbcType="VARCHAR"/>
-            <result property="deployKey" column="deployKey" jdbcType="VARCHAR"/>
-            <result property="deployedTime" column="deployedTime" jdbcType="TIMESTAMP"/>
-            <result property="priority" column="priority" jdbcType="INTEGER"/>
-            <result property="userId" column="userId" jdbcType="BIGINT"/>
-            <result property="editTime" column="editTime" jdbcType="TIMESTAMP"/>
-            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
-            <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="appName" column="appName" jdbcType="VARCHAR"/>
+        <result property="cover" column="cover" jdbcType="VARCHAR"/>
+        <result property="initPrompt" column="initPrompt" jdbcType="VARCHAR"/>
+        <result property="codeGenType" column="codeGenType" jdbcType="VARCHAR"/>
+        <result property="deployKey" column="deployKey" jdbcType="VARCHAR"/>
+        <result property="deployedTime" column="deployedTime" jdbcType="TIMESTAMP"/>
+        <result property="priority" column="priority" jdbcType="INTEGER"/>
+        <result property="userId" column="userId" jdbcType="BIGINT"/>
+        <result property="editTime" column="editTime" jdbcType="TIMESTAMP"/>
+        <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+        <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">

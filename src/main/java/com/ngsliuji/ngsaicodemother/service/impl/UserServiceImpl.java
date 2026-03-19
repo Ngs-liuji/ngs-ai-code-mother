@@ -28,14 +28,14 @@ import java.util.stream.Collectors;
 import static com.ngsliuji.ngsaicodemother.constant.UserConstant.USER_LOGIN_STATE;
 
 /**
-* @author Dell
-* @description 针对表【user(用户)】的数据库操作Service实现
-* @createDate 2026-03-13 20:13:58
-*/
+ * @author Dell
+ * @description 针对表【user(用户)】的数据库操作Service实现
+ * @createDate 2026-03-13 20:13:58
+ */
 @Slf4j
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
-    implements UserService {
+        implements UserService {
 
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
@@ -117,7 +117,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     }
 
-//    将 User 类的属؜؜؜性复制到 LoginUserVO 中，不存在的字段就被过滤掉了(BeanUtils.copyProperties(a,b)将a赋值给b)：
+    //    将 User 类的属؜؜؜性复制到 LoginUserVO 中，不存在的字段就被过滤掉了(BeanUtils.copyProperties(a,b)将a赋值给b)：
     public LoginUserVO getLoginUserVO(User user) {
         if (user == null) {
             return null;

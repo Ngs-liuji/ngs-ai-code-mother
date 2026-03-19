@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Data
 public class UserRegisterRequest implements Serializable {
 
-//序列化id 防止序列化与反序列不一致的错误
+    //序列化id 防止序列化与反序列不一致的错误
     private static final long serialVersionUID = 8168958851922559508L;
     /**
      * 用户账户

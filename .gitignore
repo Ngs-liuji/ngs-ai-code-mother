@@ -6,6 +6,9 @@ target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 src/test/
+### 临时html文件，没必要上传 ###
+tmp/
+
 
 ### STS ###
 .apt_generated

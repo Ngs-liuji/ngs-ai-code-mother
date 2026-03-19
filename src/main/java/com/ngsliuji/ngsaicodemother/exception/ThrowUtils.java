@@ -2,6 +2,7 @@ package com.ngsliuji.ngsaicodemother.exception;
 
 public class ThrowUtils {
 //为了更方便地根据情况抛出异؜؜常؜，可以封装一个؜؜ T؜hrowUtils，类似断言类，简化抛异常的代码：
+
     /**
      * 条件成立则抛异常
      *

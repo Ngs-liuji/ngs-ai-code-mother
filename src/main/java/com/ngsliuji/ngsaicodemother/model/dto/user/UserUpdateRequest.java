@@ -8,7 +8,6 @@ import java.io.Serializable;
 public class UserUpdateRequest implements Serializable {
 
 
-
     private static final long serialVersionUID = -6713082541924623295L;
     /**
      * id

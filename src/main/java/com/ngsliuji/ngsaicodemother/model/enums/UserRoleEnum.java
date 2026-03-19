@@ -33,6 +33,6 @@ public enum UserRoleEnum {
                 return item;
             }
         }
-            return null;
-        }
+        return null;
     }
+}
