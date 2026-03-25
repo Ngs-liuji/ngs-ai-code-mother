@@ -10,7 +10,7 @@ import com.ngsliuji.ngsaicodemother.model.enums.CodeGenTypeEnum;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
-
+@Deprecated //过时注解
 public class CodeFileSaver {
 
     /**
@@ -45,18 +45,6 @@ public class CodeFileSaver {
     }
 
 
-    /**
-     * 构建文件的唯一路径（/tmp/code_output/bizType+雪花ID）
-     * @param bizType 代码生产类型
-     * @return
-     */
-    public static String buildUniquePath(String bizType) {
-        //IdUtil.getSnowflakeNextIdStr() 获取雪花ID,String类型
-        String uniquePath = StrUtil.format( "{}_{}",bizType , IdUtil.getSnowflakeNextIdStr());
-        String dirPath = ROOT_PATH + File.separator+ uniquePath;
-        FileUtil.mkdir(dirPath);
-        return dirPath;
-    }
 
     /**
      * 保存单个文件
@@ -72,5 +60,19 @@ public class CodeFileSaver {
 
         System.out.println("保存文件成功：" + filePath);
 
+    }
+
+
+    /**
+     * 构建文件的唯一路径（/tmp/code_output/bizType+雪花ID）
+     * @param bizType 代码生产类型
+     * @return
+     */
+    public static String buildUniquePath(String bizType) {
+        //IdUtil.getSnowflakeNextIdStr() 获取雪花ID,String类型
+        String uniquePath = StrUtil.format( "{}_{}",bizType , IdUtil.getSnowflakeNextIdStr());
+        String dirPath = ROOT_PATH + File.separator+ uniquePath;
+        FileUtil.mkdir(dirPath);
+        return dirPath;
     }
 }
