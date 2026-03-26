@@ -12,6 +12,8 @@
     "format": "prettier --write --experimental-cli src/"
   },
   "dependencies": {
+    "ant-design-vue": "^4.2.6",
+    "axios": "^1.13.6",
     "pinia": "^3.0.4",
     "vue": "^3.5.29",
     "vue-router": "^5.0.3"
@@ -19,10 +21,16 @@
   "devDependencies": {
     "@tsconfig/node24": "^24.0.4",
     "@types/node": "^24.11.0",
+    "@umijs/openapi": "^1.14.1",
+    "openapi2ts": "openapi2ts",
     "@vitejs/plugin-vue": "^6.0.4",
     "@vue/tsconfig": "^0.8.1",
+    "eslint": "^9.22.0",
+    "eslint-plugin-vue": "^10.2.3",
+    "jiti": "^2.4.0",
     "npm-run-all2": "^8.0.4",
     "prettier": "3.8.1",
+    "tslib": "^2.8.1",
     "typescript": "~5.9.3",
     "vite": "^7.3.1",
     "vite-plugin-vue-devtools": "^8.0.6",

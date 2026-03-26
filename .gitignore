@@ -1,6 +1,7 @@
 
 application-local.yml
-#ngs-ai-code-mother-frontend/
+ngs-ai-code-mother-frontend/node_modules/
+
 HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar

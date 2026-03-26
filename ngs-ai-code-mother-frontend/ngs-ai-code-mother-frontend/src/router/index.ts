@@ -1,5 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+import HomePage from '@/pages/HomePage.vue'
+import UserLoginPage from '@/pages/user/UserLoginPage.vue'
+import UserRegisterPage from '@/pages/user/UserRegisterPage.vue'
+
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -18,13 +23,9 @@ const router = createRouter({
       name: '用户注册',
       component: UserRegisterPage,
     },
-    {
-      path: '/admin/userManage',
-      name: '用户管理',
-      component: UserManagePage,
-    },
+
   ],
-  
+
 })
 
 export default router
