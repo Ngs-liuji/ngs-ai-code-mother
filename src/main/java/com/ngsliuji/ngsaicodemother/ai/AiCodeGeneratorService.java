@@ -10,7 +10,6 @@ import reactor.core.publisher.Flux;
 public interface AiCodeGeneratorService {
 
 
-    HtmlCodeResult generateHtmlCode(@MemoryId int memoryId, @UserMessage String userMessage);
 
 
     /**

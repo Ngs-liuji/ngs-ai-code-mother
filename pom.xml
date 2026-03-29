@@ -117,6 +117,18 @@
             <artifactId>langchain4j-reactor</artifactId>
             <version>1.12.2-beta22</version>
         </dependency>
+        <!--        引入caffeine，以更好的支持本地缓存-->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
+
+        <!-- Spring Session + Redis 分布式Session-->
+        <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session-data-redis</artifactId>
+        </dependency>
+
 
     </dependencies>
 

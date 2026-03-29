@@ -7,8 +7,6 @@ spring:
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
-  session:
-    timeout: 86400
   profiles:
     active: local
   # Spring Boot HTTP 客户端配置
@@ -24,6 +22,11 @@ spring:
         port: 6379
         password:
         ttl: 3600
+  # session 配置
+  session:
+    store-type: redis
+    # session 30 天过期
+    timeout: 2592000
 
 server:
   port: 8123
@@ -34,6 +37,10 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+    # cookie 30 天过期
+    session:
+      cookie:
+        max-age: 2592000
 
 mybatis-plus:
   configuration:
