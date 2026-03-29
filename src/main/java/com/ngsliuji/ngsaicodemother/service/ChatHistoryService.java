@@ -1,13 +1,70 @@
 package com.ngsliuji.ngsaicodemother.service;
 
+
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ngsliuji.ngsaicodemother.model.dto.chathistory.ChatHistoryQueryRequest;
 import com.ngsliuji.ngsaicodemother.model.entity.ChatHistory;
+import com.ngsliuji.ngsaicodemother.model.entity.User;
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
+
+import java.time.LocalDateTime;
 
 /**
- * @author Dell
- * @description 针对表【chat_history(对话历史)】的数据库操作Service
- * @createDate 2026-03-13 20:14:42
+ * 对话历史 服务层。
+ *
  */
 public interface ChatHistoryService extends IService<ChatHistory> {
 
+    /**
+     * 添加对话历史
+     *
+     * @param appId       应用 id
+     * @param message     消息
+     * @param messageType 消息类型
+     * @param userId      用户 id
+     * @return 是否成功
+     */
+    boolean addChatMessage(Long appId, String message, String messageType, Long userId);
+
+    /**
+     * 根据应用 id 删除对话历史
+     *
+     * @param appId
+     * @return
+     */
+    boolean deleteByAppId(Long appId);
+
+    /**
+     * 分页查询某 APP 的对话记录
+     *
+     * @param appId
+     * @param pageSize
+     * @param lastCreateTime
+     * @param loginUser
+     * @return
+     */
+    Page<ChatHistory> listAppChatHistoryByPage(Long appId, int pageSize,
+                                               LocalDateTime lastCreateTime,
+                                               User loginUser);
+
+    /**
+     * 加载对话历史到内存
+     *
+     * @param appId
+     * @param chatMemory
+     * @param maxCount 最多加载多少条
+     * @return 加载成功的条数
+     */
+    int loadChatHistoryToMemory(Long appId, MessageWindowChatMemory chatMemory, int maxCount);
+
+    /**
+     * 构造查询条件
+     *
+     * @param chatHistoryQueryRequest
+     * @return
+     */
+    QueryWrapper getQueryWrapper(ChatHistoryQueryRequest chatHistoryQueryRequest);
 }

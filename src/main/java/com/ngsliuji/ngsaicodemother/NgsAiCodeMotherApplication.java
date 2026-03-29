@@ -1,10 +1,13 @@
 package com.ngsliuji.ngsaicodemother;
 
+import dev.langchain4j.community.store.embedding.redis.spring.RedisEmbeddingStoreAutoConfiguration;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+//在启动类中排除 em؜b؜e؜dding؜ 的؜自动؜装配，因为本项目用不到
+@SpringBootApplication(exclude = {RedisEmbeddingStoreAutoConfiguration.class})
+
 @MapperScan("com.ngsliuji.ngsaicodemother.mapper")
 public class NgsAiCodeMotherApplication {
 

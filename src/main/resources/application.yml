@@ -1,6 +1,7 @@
 spring:
   application:
     name: ngs-ai-code-mother
+  # 数据库
   datasource:
     url: jdbc:mysql://localhost:3306/ngs_ai_code_mother?   useUnicode=true&characterEncoding=utf8
     username: root
@@ -16,6 +17,14 @@ spring:
       connect-timeout: 30s
       read-timeout: 180s
       write-timeout: 180s
+  # redis
+  data:
+      redis:
+        host: localhost
+        port: 6379
+        password:
+        ttl: 3600
+
 server:
   port: 8123
   servlet:
@@ -25,6 +34,7 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false

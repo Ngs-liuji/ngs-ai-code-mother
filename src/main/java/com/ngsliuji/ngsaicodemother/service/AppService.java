@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ngsliuji.ngsaicodemother.model.dto.app.AppQueryRequest;
 import com.ngsliuji.ngsaicodemother.model.entity.App;
+import com.ngsliuji.ngsaicodemother.model.entity.User;
 import com.ngsliuji.ngsaicodemother.model.vo.AppVO;
+import reactor.core.publisher.Flux;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -26,4 +29,11 @@ public interface AppService extends IService<App> {
     List<AppVO> getAppVOList(List<App> appList);
 
     QueryWrapper<App> getQueryWrapper(AppQueryRequest appQueryRequest);
+
+
+    Flux<String> chatToGenCode(Long appId, String message, User loginUser);
+
+
+    String deployApp(Long appId, User loginUser);
+    boolean removeById(Serializable id);
 }

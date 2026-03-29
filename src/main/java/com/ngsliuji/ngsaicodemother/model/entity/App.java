@@ -1,6 +1,6 @@
 package com.ngsliuji.ngsaicodemother.model.entity;
 
-import cn.hutool.crypto.asymmetric.KeyType;
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -54,7 +54,7 @@ public class App implements Serializable {
     /**
      * 部署时间
      */
-    private Date deployedTime;
+    private LocalDateTime deployedTime;
 
     /**
      * 优先级
@@ -69,17 +69,17 @@ public class App implements Serializable {
     /**
      * 编辑时间
      */
-    private Date editTime;
+    private LocalDateTime  editTime;
 
     /**
      * 创建时间
      */
-    private Date createTime;
+    private LocalDateTime  createTime;
 
     /**
      * 更新时间
      */
-    private Date updateTime;
+    private LocalDateTime  updateTime;
 
     /**
      * 是否删除

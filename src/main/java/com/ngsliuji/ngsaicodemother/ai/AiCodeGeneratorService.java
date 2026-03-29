@@ -2,10 +2,15 @@ package com.ngsliuji.ngsaicodemother.ai;
 
 import com.ngsliuji.ngsaicodemother.ai.model.HtmlCodeResult;
 import com.ngsliuji.ngsaicodemother.ai.model.MultiFileCodeResult;
+import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.SystemMessage;
+import dev.langchain4j.service.UserMessage;
 import reactor.core.publisher.Flux;
 
 public interface AiCodeGeneratorService {
+
+
+    HtmlCodeResult generateHtmlCode(@MemoryId int memoryId, @UserMessage String userMessage);
 
 
     /**

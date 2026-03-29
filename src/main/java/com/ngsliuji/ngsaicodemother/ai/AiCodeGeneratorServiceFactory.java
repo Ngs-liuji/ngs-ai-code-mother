@@ -1,6 +1,7 @@
 package com.ngsliuji.ngsaicodemother.ai;
 
 
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.StreamingChatModel;
 import dev.langchain4j.service.AiServices;
@@ -21,6 +22,8 @@ public class AiCodeGeneratorServiceFactory {
         return AiServices.builder(AiCodeGeneratorService.class)
                 .chatModel(chatModel)
                 .streamingChatModel(streamingChatModel)
+                //使用 MessageWindowChatMemory.withMaxMessages(10)，表示保留最近 10 条消息作为上下文记忆。
+                .chatMemoryProvider(chatMemory -> MessageWindowChatMemory.withMaxMessages(10))
                 .build();
     }
 }

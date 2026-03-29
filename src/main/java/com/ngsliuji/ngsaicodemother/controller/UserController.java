@@ -138,14 +138,39 @@ public class UserController {
         return ResultUtils.success(b);
     }
 
+        /**
+         * 更新用户信息（管理员）
+         */
+        @PostMapping("/admin/update")
+        @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+        public BaseResponse<Boolean> updateUserAdmin(@RequestBody UserUpdateRequest userUpdateRequest) {
+            if (userUpdateRequest == null || userUpdateRequest.getId() == null) {
+                throw new BusinessException(ErrorCode.PARAMS_ERROR);
+            }
+            User user = new User();
+            BeanUtils.copyProperties(userUpdateRequest, user);
+            boolean result = userService.updateById(user);
+            ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+            return ResultUtils.success(true);
+    }
+
     /**
      * 更新用户
      */
     @PostMapping("/update")
-//    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest) {
+    @AuthCheck(mustRole = UserConstant.USER_LOGIN_STATE)
+    public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest,HttpServletRequest  request) {
         if (userUpdateRequest == null || userUpdateRequest.getId() == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        //1.获取当前登录用户id
+        Long loginUserId = userService.getLoginUser(request).getId();
+
+        //2.获取修改信息用户id
+        Long updateUserId = userUpdateRequest.getId();
+        //3.判断用户id是否一致
+        if(!loginUserId.equals(updateUserId)){
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         User user = new User();
         BeanUtils.copyProperties(userUpdateRequest, user);
