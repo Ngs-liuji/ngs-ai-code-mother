@@ -2,6 +2,7 @@ package com.ngsliuji.ngsaicodemother.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -60,8 +61,9 @@ public class ChatHistoryServiceImpl extends ServiceImpl<ChatHistoryMapper, ChatH
     @Override
     public boolean deleteByAppId(Long appId) {
         ThrowUtils.throwIf(appId == null || appId <= 0, ErrorCode.PARAMS_ERROR, "应用 ID 不能为空");
-        QueryWrapper<ChatHistory> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("app_id", appId);
+        // 使用 LambdaQueryWrapper 避免硬编码列名，类型更安全
+        LambdaQueryWrapper<ChatHistory> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ChatHistory::getAppId, appId);
         return this.remove(queryWrapper);
     }
 
@@ -90,10 +92,10 @@ public class ChatHistoryServiceImpl extends ServiceImpl<ChatHistoryMapper, ChatH
     @Override
     public int loadChatHistoryToMemory(Long appId, MessageWindowChatMemory chatMemory, int maxCount) {
         try {
-            // 直接构造查询条件，起始点为 1 而不是 0，用于排除最新的用户消息
-            QueryWrapper<ChatHistory> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("app_id", appId)
-                    .orderByDesc("create_time")
+            // 使用 LambdaQueryWrapper 避免硬编码列名，类型更安全
+            LambdaQueryWrapper<ChatHistory> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(ChatHistory::getAppId, appId)
+                    .orderByDesc(ChatHistory::getCreateTime)
                     .last("LIMIT " + maxCount);
             List<ChatHistory> historyList = this.list(queryWrapper);
             if (CollUtil.isEmpty(historyList)) {
@@ -125,7 +127,6 @@ public class ChatHistoryServiceImpl extends ServiceImpl<ChatHistoryMapper, ChatH
 
 
 
-
     /**
      * 获取查询包装类
      *
@@ -144,27 +145,28 @@ public class ChatHistoryServiceImpl extends ServiceImpl<ChatHistoryMapper, ChatH
         LocalDateTime lastCreateTime = chatHistoryQueryRequest.getLastCreateTime();
         String sortField = chatHistoryQueryRequest.getSortField();
         String sortOrder = chatHistoryQueryRequest.getSortOrder();
-        // 拼接查询条件
+        // 拼接查询条件 - 使用驼峰命名，MyBatis-Plus 会自动转换为下划线列名
         queryWrapper
-                .eq(id != null, "id", id)
-                .eq(StrUtil.isNotBlank(messageType), "message_type", messageType)
+                .eq(id != null, "appId", appId)
+                .eq(StrUtil.isNotBlank(messageType), "messageType", messageType)
                 .like(StrUtil.isNotBlank(message), "message", message)
-                .eq(appId != null, "app_id", appId)
-                .eq(userId != null, "user_id", userId);
+                .eq(appId != null, "appId", appId)
+                .eq(userId != null, "userId", userId);
         // 游标查询逻辑 - 只使用 createTime 作为游标
         if (lastCreateTime != null) {
-            queryWrapper.lt("create_time", lastCreateTime);
+            queryWrapper.lt("createTime", lastCreateTime);
         }
         // 排序
         if (StrUtil.isNotBlank(sortField)) {
             queryWrapper.orderBy(true, "ascend".equals(sortOrder), sortField);
         } else {
             // 默认按创建时间降序排列
-            queryWrapper.orderByDesc("create_time");
+            queryWrapper.orderByDesc("createTime");
         }
         return queryWrapper;
     }
 }
+
 
 
 
