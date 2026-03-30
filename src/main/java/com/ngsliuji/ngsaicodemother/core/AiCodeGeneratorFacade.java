@@ -1,14 +1,22 @@
 package com.ngsliuji.ngsaicodemother.core;
 
+import cn.hutool.json.JSONUtil;
 import com.ngsliuji.ngsaicodemother.ai.AiCodeGeneratorService;
 import com.ngsliuji.ngsaicodemother.ai.AiCodeGeneratorServiceFactory;
 import com.ngsliuji.ngsaicodemother.ai.model.HtmlCodeResult;
 import com.ngsliuji.ngsaicodemother.ai.model.MultiFileCodeResult;
+import com.ngsliuji.ngsaicodemother.ai.model.message.AiResponseMessage;
+import com.ngsliuji.ngsaicodemother.ai.model.message.ToolExecutedMessage;
+import com.ngsliuji.ngsaicodemother.ai.model.message.ToolRequestMessage;
 import com.ngsliuji.ngsaicodemother.core.parser.CodeParserExecutor;
 import com.ngsliuji.ngsaicodemother.core.saver.CodeFileSaverExecutor;
 import com.ngsliuji.ngsaicodemother.exception.BusinessException;
 import com.ngsliuji.ngsaicodemother.exception.ErrorCode;
 import com.ngsliuji.ngsaicodemother.model.enums.CodeGenTypeEnum;
+import dev.langchain4j.agent.tool.ToolExecutionRequest;
+import dev.langchain4j.model.chat.response.ChatResponse;
+import dev.langchain4j.service.TokenStream;
+import dev.langchain4j.service.tool.ToolExecution;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -117,6 +125,44 @@ public class AiCodeGeneratorFacade {
             }
         });
     }
+
+
+
+    private Flux<String> processTokenStream(TokenStream tokenStream) {
+        return Flux.create(sink -> {
+            tokenStream.onPartialResponse((String partialResponse) -> {
+                        AiResponseMessage aiResponseMessage = new AiResponseMessage(partialResponse);
+                        sink.next(JSONUtil.toJsonStr(aiResponseMessage));
+                    })
+                    // ###########################################################
+                    // 关键：从 ToolExecution 中获取 ToolExecutionRequest
+                    // 100% 适配 1.12.2，不使用任何不存在的方法
+                    // ###########################################################
+                    .onToolExecuted((ToolExecution toolExecution) -> {
+
+                        // 1. 获取工具调用请求（你要保留的核心对象）
+                        ToolExecutionRequest request = toolExecution.request();
+
+                        // 2. 向前端推送工具请求（完全还原你原来的功能）
+                        ToolRequestMessage toolRequestMessage = new ToolRequestMessage(request);
+                        sink.next(JSONUtil.toJsonStr(toolRequestMessage));
+
+                        // 3. 继续推送工具执行结果（原有逻辑不变）
+                        ToolExecutedMessage toolExecutedMessage = new ToolExecutedMessage(toolExecution);
+                        sink.next(JSONUtil.toJsonStr(toolExecutedMessage));
+                    })
+
+                    .onCompleteResponse((ChatResponse response) -> {
+                        sink.complete();
+                    })
+                    .onError((Throwable error) -> {
+                        error.printStackTrace();
+                        sink.error(error);
+                    })
+                    .start();
+        });
+    }
+
 
 
 }
