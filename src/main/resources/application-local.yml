@@ -9,16 +9,20 @@ langchain4j:
       #json 格式输出配置
       response_format: json_object
       #开启日志
-      log-response: true
-      log-request: true
-      #设置最大请求次数
-      max-requests: 3
+      logRequests: true
+      logResponses: true
+
     streaming-chat-model:
       model-name: "qwen3.5-plus"
       api-key: ${DASHSCOPE_API_KEY}
       base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
-      log-response: true
-      log-request: true
+      logRequests: true
+      logResponses: true
       max-tokens: 8192
-      # 超时配置（秒）
-      duration: PT180S
+    reasoning-streaming-chat-model:
+      model-name: "qwen3.5-plus"
+      api-key: ${DASHSCOPE_API_KEY}
+      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
+      logRequests: true
+      logResponses: true
+      max-tokens: 8192

@@ -16,6 +16,7 @@ import dev.langchain4j.model.chat.StreamingChatModel;
 import dev.langchain4j.service.AiServices;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,9 +30,11 @@ public class AiCodeGeneratorServiceFactory {
     private ChatModel chatModel;
 
     @Resource
+    @Qualifier("openAiStreamingChatModel")
     private StreamingChatModel openAiStreamingChatModel;
 
     @Resource
+    @Qualifier("reasoningStreamingChatModelPrototype")
     private StreamingChatModel reasoningStreamingChatModel;
 
     @Resource
@@ -41,13 +44,7 @@ public class AiCodeGeneratorServiceFactory {
     private ChatHistoryService chatHistoryService;
 
 
-    /**
-     * 默认提供一个 Bean
-     */
-    @Bean
-    public AiCodeGeneratorService aiCodeGeneratorService() {
-        return getAiCodeGeneratorService(0L);
-    }
+
 
 
 
@@ -58,12 +55,12 @@ public class AiCodeGeneratorServiceFactory {
      * - 写入后 30 分钟过期
      * - 访问后 10 分钟过期
      */
-    private final Cache<Long, AiCodeGeneratorService> serviceCache = Caffeine.newBuilder()
+    private final Cache<String, AiCodeGeneratorService> serviceCache = Caffeine.newBuilder()
             .maximumSize(1000)
             .expireAfterWrite(Duration.ofMinutes(30))
             .expireAfterAccess(Duration.ofMinutes(10))
             .removalListener((key, value, cause) -> {
-                log.debug("AI 服务实例被移除，appId: {}, 原因: {}", key, cause);
+                log.debug("AI 服务实例被移除，缓存键: {}, 原因: {}", key, cause);
             })
             .build();
 
@@ -80,15 +77,9 @@ public class AiCodeGeneratorServiceFactory {
      */
     public AiCodeGeneratorService getAiCodeGeneratorService(long appId, CodeGenTypeEnum codeGenType) {
         String cacheKey = buildCacheKey(appId, codeGenType);
-        return serviceCache.get(Long.valueOf(cacheKey), key -> createAiCodeGeneratorService(appId, codeGenType));
+        return serviceCache.get(cacheKey, key -> createAiCodeGeneratorService(appId, codeGenType));
     }
 
-    /**
-     * 构建缓存键
-     */
-    private String buildCacheKey(long appId, CodeGenTypeEnum codeGenType) {
-        return appId + "_" + codeGenType.getValue();
-    }
 
 
 
@@ -110,6 +101,7 @@ public class AiCodeGeneratorServiceFactory {
         return switch (codeGenType) {
             // Vue 项目生成使用推理模型
             case VUE_PROJECT -> AiServices.builder(AiCodeGeneratorService.class)
+                    .chatModel(chatModel)
                     .streamingChatModel(reasoningStreamingChatModel)
                     .chatMemoryProvider(memoryId -> chatMemory)
                     .tools(new FileWriteTool())
@@ -128,7 +120,19 @@ public class AiCodeGeneratorServiceFactory {
         };
     }
 
-
+    /**
+     * 默认提供一个 Bean
+     */
+    @Bean
+    public AiCodeGeneratorService aiCodeGeneratorService() {
+        return getAiCodeGeneratorService(0);
+    }
+    /**
+     * 构建缓存键
+     */
+    private String buildCacheKey(long appId, CodeGenTypeEnum codeGenType) {
+        return appId + "_" + codeGenType.getValue();
+    }
 
 }
 

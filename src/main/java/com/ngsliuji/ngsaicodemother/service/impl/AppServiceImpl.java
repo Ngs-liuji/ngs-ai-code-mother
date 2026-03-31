@@ -8,6 +8,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ngsliuji.ngsaicodemother.constant.AppConstant;
 import com.ngsliuji.ngsaicodemother.core.AiCodeGeneratorFacade;
+import com.ngsliuji.ngsaicodemother.core.handler.StreamHandlerExecutor;
 import com.ngsliuji.ngsaicodemother.exception.BusinessException;
 import com.ngsliuji.ngsaicodemother.exception.ErrorCode;
 import com.ngsliuji.ngsaicodemother.exception.ThrowUtils;
@@ -50,6 +51,8 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
     private AiCodeGeneratorFacade aiCodeGeneratorFacade;
     @Resource
     private ChatHistoryService chatHistoryService;
+    @Resource
+    private StreamHandlerExecutor streamHandlerExecutor;
 
  
     @Override
@@ -151,6 +154,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>
                     chatHistoryService.addChatMessage(appId, errorMessage, ChatHistoryMessageTypeEnum.AI.getValue(), loginUser.getId());
                 });
     }
+
 
 
     @Override
