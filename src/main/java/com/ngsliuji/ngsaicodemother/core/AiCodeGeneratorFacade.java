@@ -130,7 +130,10 @@ public class AiCodeGeneratorFacade {
 
     private Flux<String> processTokenStream(TokenStream tokenStream) {
         return Flux.create(sink -> {
+            log.info("开始创建 TokenStream，appId: {}", sink.currentContext().<Long>getOrEmpty("appId").orElse(0L));
+
             tokenStream.onPartialResponse((String partialResponse) -> {
+                        log.debug("收到部分响应：{}", partialResponse);
                         AiResponseMessage aiResponseMessage = new AiResponseMessage(partialResponse);
                         sink.next(JSONUtil.toJsonStr(aiResponseMessage));
                     })
@@ -139,6 +142,7 @@ public class AiCodeGeneratorFacade {
                     // 100% 适配 1.12.2，不使用任何不存在的方法
                     // ###########################################################
                     .onToolExecuted((ToolExecution toolExecution) -> {
+                        log.debug("工具执行完成：{}", toolExecution.request().name());
 
                         // 1. 获取工具调用请求（你要保留的核心对象）
                         ToolExecutionRequest request = toolExecution.request();
@@ -153,15 +157,18 @@ public class AiCodeGeneratorFacade {
                     })
 
                     .onCompleteResponse((ChatResponse response) -> {
+                        log.info("onCompleteResponse 被触发，流正常完成");
                         sink.complete();
                     })
                     .onError((Throwable error) -> {
+                        log.error("onError 被触发，error: {}", error.getMessage(), error);
                         error.printStackTrace();
                         sink.error(error);
                     })
                     .start();
         });
     }
+
 
 
 

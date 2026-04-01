@@ -49,12 +49,26 @@ public class JsonMessageStreamHandler {
                 .doOnComplete(() -> {
                     // 流式响应完成后，添加 AI 消息到对话历史
                     String aiResponse = chatHistoryStringBuilder.toString();
-                    chatHistoryService.addChatMessage(appId, aiResponse, ChatHistoryMessageTypeEnum.AI.getValue(), loginUser.getId());
+                    if (StrUtil.isNotBlank(aiResponse)) {
+                        try {
+                            chatHistoryService.addChatMessage(appId, aiResponse, ChatHistoryMessageTypeEnum.AI.getValue(), loginUser.getId());
+                            log.info("成功保存 AI 响应到对话历史，appId: {}, 内容长度：{}", appId, aiResponse.length());
+                        } catch (Exception e) {
+                            log.error("保存 AI 响应到对话历史失败，appId: {}, error: {}", appId, e.getMessage(), e);
+                        }
+                    } else {
+                        log.warn("AI 响应内容为空，未保存到对话历史，appId: {}", appId);
+                    }
                 })
                 .doOnError(error -> {
-                    // 如果AI回复失败，也要记录错误消息
-                    String errorMessage = "AI回复失败: " + error.getMessage();
-                    chatHistoryService.addChatMessage(appId, errorMessage, ChatHistoryMessageTypeEnum.AI.getValue(), loginUser.getId());
+                    // 如果 AI 回复失败，也要记录错误消息
+                    String errorMessage = "AI 回复失败：" + error.getMessage();
+                    log.error("AI 回复失败，记录错误消息到对话历史，appId: {}, error: {}", appId, error.getMessage(), error);
+                    try {
+                        chatHistoryService.addChatMessage(appId, errorMessage, ChatHistoryMessageTypeEnum.AI.getValue(), loginUser.getId());
+                    } catch (Exception e) {
+                        log.error("保存错误消息到对话历史失败，appId: {}, error: {}", appId, e.getMessage(), e);
+                    }
                 });
     }
 

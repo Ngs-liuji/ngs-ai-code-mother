@@ -68,6 +68,8 @@ public class AppController {
         app.setUserId(loginUser.getId());
         // 应用名称暂时为 initPrompt 前 12 位
         app.setAppName(initPrompt.substring(0, Math.min(initPrompt.length(), 12)));
+//         暂时设置为单文件生成
+//        app.setCodeGenType(CodeGenTypeEnum.HTML.getValue());
         // 暂时设置为多文件生成
 //        app.setCodeGenType(CodeGenTypeEnum.MULTI_FILE.getValue());
         // 暂时设置为vue文件生成
