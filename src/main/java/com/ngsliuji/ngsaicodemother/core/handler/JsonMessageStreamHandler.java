@@ -5,9 +5,12 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.ngsliuji.ngsaicodemother.ai.model.message.*;
+import com.ngsliuji.ngsaicodemother.constant.AppConstant;
+import com.ngsliuji.ngsaicodemother.core.builder.VueProjectBuilder;
 import com.ngsliuji.ngsaicodemother.model.entity.User;
 import com.ngsliuji.ngsaicodemother.model.enums.ChatHistoryMessageTypeEnum;
 import com.ngsliuji.ngsaicodemother.service.ChatHistoryService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
@@ -22,6 +25,10 @@ import java.util.Set;
 @Slf4j
 @Component
 public class JsonMessageStreamHandler {
+
+
+    @Resource
+    private VueProjectBuilder vueProjectBuilder;
 
     /**
      * 处理 TokenStream（VUE_PROJECT）
@@ -53,6 +60,10 @@ public class JsonMessageStreamHandler {
                         try {
                             chatHistoryService.addChatMessage(appId, aiResponse, ChatHistoryMessageTypeEnum.AI.getValue(), loginUser.getId());
                             log.info("成功保存 AI 响应到对话历史，appId: {}, 内容长度：{}", appId, aiResponse.length());
+
+                            // 异步构造 Vue 项目
+                            String projectPath = AppConstant.CODE_OUTPUT_ROOT_DIR + "/vue_project_" + appId;
+                            vueProjectBuilder.buildProjectAsync(projectPath);
                         } catch (Exception e) {
                             log.error("保存 AI 响应到对话历史失败，appId: {}, error: {}", appId, e.getMessage(), e);
                         }

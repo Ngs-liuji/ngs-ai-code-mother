@@ -2,7 +2,7 @@
 langchain4j:
   openai:
     chat-model:
-      model-name: "qwen3.5-plus"
+      model-name: "qwen3-vl-flash-2026-01-22"
       api-key: ${DASHSCOPE_API_KEY}
       base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
       max-tokens: 8192
@@ -13,16 +13,24 @@ langchain4j:
       logResponses: true
 
     streaming-chat-model:
-      model-name: "qwen3.5-plus"
+      model-name: "qwen3.5-plus-2026-02-15"
       api-key: ${DASHSCOPE_API_KEY}
       base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
       logRequests: true
       logResponses: true
       max-tokens: 8192
     reasoning-streaming-chat-model:
-      model-name: "qwen3.5-plus"
+      model-name: "MiniMax-M2.1"
       api-key: ${DASHSCOPE_API_KEY}
       base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
       logRequests: true
       logResponses: true
       max-tokens: 8192
+# 添加 COS 对象存储配置（需要从腾讯云获取）
+cos:
+  client:
+    host: https://qqimg.2718065.xyz
+    secretId: ${TENCENT_SECRET_ID}
+    secretKey: ${TENCENT_SECRET_KEY}
+    region: ap-beijing
+    bucket: img-1302782080

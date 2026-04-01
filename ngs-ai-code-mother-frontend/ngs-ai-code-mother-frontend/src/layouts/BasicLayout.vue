@@ -14,8 +14,17 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import GlobalHeader from '@/components/GlobalHeader.vue'
 import GlobalFooter from '@/components/GlobalFooter.vue'
+import { useLoginUserStore } from '@/stores/loginUser.ts'
+
+const loginUserStore = useLoginUserStore()
+
+// 应用初始化时获取登录用户信息
+onMounted(async () => {
+  await loginUserStore.fetchLoginUser()
+})
 </script>
 
 <style scoped>

@@ -14,6 +14,7 @@
   "dependencies": {
     "ant-design-vue": "^4.2.6",
     "axios": "^1.13.6",
+    "highlight.js": "^11.11.1",
     "pinia": "^3.0.4",
     "vue": "^3.5.29",
     "vue-router": "^5.0.3"
@@ -22,7 +23,6 @@
     "@tsconfig/node24": "^24.0.4",
     "@types/node": "^24.11.0",
     "@umijs/openapi": "^1.14.1",
-    "openapi2ts": "openapi2ts",
     "@vitejs/plugin-vue": "^6.0.4",
     "@vue/tsconfig": "^0.8.1",
     "eslint": "^9.22.0",
