@@ -23,18 +23,33 @@ import java.util.UUID;
 
 @Slf4j
 public class WebScreenshotUtils {
+//，实现复杂度一般，而且能解决并发问题；缺点是如果你的线程数较多，webDriver 也较多、一直不释放，可能会导致内存溢出。
+    //与线程同生命周期的 WebDriver
+    private static final ThreadLocal<WebDriver> driverThreadLocal = new ThreadLocal<>();
 
-    private static final WebDriver webDriver;
-
-    static {
-        final int DEFAULT_WIDTH = 1600;
-        final int DEFAULT_HEIGHT = 900;
-        webDriver = initChromeDriver(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    public static WebDriver getDriver() {
+        WebDriver driver = driverThreadLocal.get();
+        if (driver == null) {
+            final int DEFAULT_WIDTH = 1600;
+            final int DEFAULT_HEIGHT = 900;
+            driver = initChromeDriver(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+            driverThreadLocal.set(driver);
+        }
+        return driver;
     }
+
+
+//    private static final WebDriver webDriver;
+//
+//    static {
+//        final int DEFAULT_WIDTH = 1600;
+//        final int DEFAULT_HEIGHT = 900;
+//        webDriver = initChromeDriver(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+//    }
 
     @PreDestroy
     public void destroy() {
-        webDriver.quit();
+        getDriver().quit();
     }
 
     /**
@@ -140,6 +155,8 @@ public class WebScreenshotUtils {
             final String IMAGE_SUFFIX = ".png";
             // 原始截图文件路径
             String imageSavePath = rootPath + File.separator + RandomUtil.randomNumbers(5) + IMAGE_SUFFIX;
+//            获取浏览器驱动
+            WebDriver webDriver =getDriver();
             // 访问网页
             webDriver.get(webUrl);
             // 等待页面加载完成
