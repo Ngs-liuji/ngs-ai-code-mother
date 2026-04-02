@@ -2,6 +2,7 @@ package com.ngsliuji.ngsaicodemother.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ngsliuji.ngsaicodemother.model.dto.app.AppAddRequest;
 import com.ngsliuji.ngsaicodemother.model.dto.app.AppQueryRequest;
 import com.ngsliuji.ngsaicodemother.model.entity.App;
 import com.ngsliuji.ngsaicodemother.model.entity.User;
@@ -18,6 +19,7 @@ import java.util.List;
  */
 public interface AppService extends IService<App> {
 
+    public Long createApp(AppAddRequest appAddRequest, User loginUser);
     /**
      * App 实体转 VO
      */
