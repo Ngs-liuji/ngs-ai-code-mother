@@ -35,14 +35,24 @@ public class ChatHistory implements Serializable {
     private String messageType;
 
     /**
-     * 应用id
+     * 应用 id
      */
     private Long appId;
 
     /**
-     * 创建用户id
+     * 创建用户 id
      */
     private Long userId;
+
+    /**
+     * 分段索引（从 0 开始）
+     */
+    private Integer segmentIndex;
+
+    /**
+     * 总分段数
+     */
+    private Integer totalSegments;
 
     /**
      * 创建时间

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ngsliuji.ngsaicodemother.constant.AppConstant;
 import com.ngsliuji.ngsaicodemother.constant.UserConstant;
 import com.ngsliuji.ngsaicodemother.exception.ErrorCode;
 import com.ngsliuji.ngsaicodemother.exception.ThrowUtils;
@@ -20,12 +21,14 @@ import com.ngsliuji.ngsaicodemother.service.ChatHistoryService;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +41,9 @@ public class ChatHistoryServiceImpl extends ServiceImpl<ChatHistoryMapper, ChatH
     @Resource
     @Lazy
     private AppService appService;
+
+    // 单条消息最大长度限制（字节），留一些余量
+    private static final int MAX_MESSAGE_LENGTH = 15000;
 
     @Override
     public boolean addChatMessage(Long appId, String message, String messageType, Long userId) {
@@ -52,13 +58,55 @@ public class ChatHistoryServiceImpl extends ServiceImpl<ChatHistoryMapper, ChatH
         // 验证消息类型是否有效
         ChatHistoryMessageTypeEnum messageTypeEnum = ChatHistoryMessageTypeEnum.getEnumByValue(messageType);
         ThrowUtils.throwIf(messageTypeEnum == null, ErrorCode.PARAMS_ERROR, "不支持的消息类型");
-        // 插入数据库
-        ChatHistory chatHistory =new ChatHistory();
-        chatHistory.setAppId(appId);
-        chatHistory.setMessage(message);
-        chatHistory.setMessageType(messageType);
-        chatHistory.setUserId(userId);
-        return this.save(chatHistory);
+        
+        // 判断是否需要分段存储
+        if (message.length() > MAX_MESSAGE_LENGTH) {
+            return saveSegmentedMessage(appId, message, messageType, userId);
+        } else {
+            // 单条存储
+            ChatHistory chatHistory = new ChatHistory();
+            chatHistory.setAppId(appId);
+            chatHistory.setMessage(message);
+            chatHistory.setMessageType(messageType);
+            chatHistory.setUserId(userId);
+            chatHistory.setSegmentIndex(0);
+            chatHistory.setTotalSegments(1);
+            return this.save(chatHistory);
+        }
+    }
+
+    /**
+     * 分段保存消息
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public boolean saveSegmentedMessage(Long appId, String message, String messageType, Long userId) {
+        try {
+            List<ChatHistory> segments = new ArrayList<>();
+            int length = message.length();
+            int totalSegments = (int) Math.ceil((double) length / MAX_MESSAGE_LENGTH);
+            
+            for (int i = 0; i < totalSegments; i++) {
+                int start = i * MAX_MESSAGE_LENGTH;
+                int end = Math.min(start + MAX_MESSAGE_LENGTH, length);
+                String segmentContent = message.substring(start, end);
+                
+                ChatHistory segment = new ChatHistory();
+                segment.setAppId(appId);
+                segment.setMessage(segmentContent);
+                segment.setMessageType(messageType);
+                segment.setUserId(userId);
+                segment.setSegmentIndex(i);
+                segment.setTotalSegments(totalSegments);
+                segments.add(segment);
+            }
+            
+            boolean result = this.saveBatch(segments);
+            log.info("成功分段保存 AI 消息到对话历史，appId: {}, 总分段数：{}", appId, totalSegments);
+            return result;
+        } catch (Exception e) {
+            log.error("分段保存 AI 消息失败，appId: {}, error: {}", appId, e.getMessage(), e);
+            throw new RuntimeException("分段保存失败", e);
+        }
     }
 
     @Override
@@ -111,7 +159,11 @@ public class ChatHistoryServiceImpl extends ServiceImpl<ChatHistoryMapper, ChatH
             int loadedCount = 0;
             // 先清理历史缓存，防止重复加载
             chatMemory.clear();
-            for (ChatHistory history : historyList) {
+            
+            // 合并分段消息
+            List<ChatHistory> mergedHistoryList = mergeSegmentedMessages(historyList);
+            
+            for (ChatHistory history : mergedHistoryList) {
                 if (ChatHistoryMessageTypeEnum.USER.getValue().equals(history.getMessageType())) {
                     chatMemory.add(UserMessage.from(history.getMessage()));
                     loadedCount++;
@@ -129,7 +181,54 @@ public class ChatHistoryServiceImpl extends ServiceImpl<ChatHistoryMapper, ChatH
         }
     }
 
-
+    /**
+     * 合并分段消息
+     * @param historyList 已按 createTime 排序的历史记录
+     * @return 合并后的历史记录列表
+     */
+    private List<ChatHistory> mergeSegmentedMessages(List<ChatHistory> historyList) {
+        List<ChatHistory> mergedList = new ArrayList<>();
+        int i = 0;
+        
+        while (i < historyList.size()) {
+            ChatHistory current = historyList.get(i);
+            
+            // 如果是多段消息的第一段，则合并所有分段
+            if (current.getTotalSegments() > 1 && current.getSegmentIndex() == 0) {
+                StringBuilder mergedMessage = new StringBuilder(current.getMessage());
+                
+                // 查找并合并后续分段
+                int j = i + 1;
+                while (j < historyList.size() && 
+                       j < i + current.getTotalSegments() &&
+                       historyList.get(j).getSegmentIndex() == (j - i)) {
+                    mergedMessage.append(historyList.get(j).getMessage());
+                    j++;
+                }
+                
+                // 创建合并后的 ChatHistory 对象
+                ChatHistory merged = new ChatHistory();
+                merged.setId(current.getId());
+                merged.setMessage(mergedMessage.toString());
+                merged.setMessageType(current.getMessageType());
+                merged.setAppId(current.getAppId());
+                merged.setUserId(current.getUserId());
+                merged.setSegmentIndex(0);
+                merged.setTotalSegments(1);
+                merged.setCreateTime(current.getCreateTime());
+                merged.setUpdateTime(current.getUpdateTime());
+                
+                mergedList.add(merged);
+                i = j; // 跳过已合并的分段
+            } else {
+                // 单段消息直接添加
+                mergedList.add(current);
+                i++;
+            }
+        }
+        
+        return mergedList;
+    }
 
     /**
      * 获取查询包装类
