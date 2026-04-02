@@ -75,6 +75,7 @@ export class VisualEditor {
     } else {
       this.enableEditMode()
     }
+    // 确保返回正确的编辑模式状态
     return this.isEditMode
   }
 
@@ -118,18 +119,27 @@ export class VisualEditor {
    * 处理来自 iframe 的消息
    */
   handleIframeMessage(event: MessageEvent) {
-    const { type, data } = event.data
-    switch (type) {
-      case 'ELEMENT_SELECTED':
-        if (this.options.onElementSelected && data.elementInfo) {
-          this.options.onElementSelected(data.elementInfo)
+    try {
+      // 确保 event.data 是一个对象
+      if (typeof event.data === 'object' && event.data !== null) {
+        const { type, data } = event.data
+        switch (type) {
+          case 'ELEMENT_SELECTED':
+            // 检查 data 和 data.elementInfo 是否存在
+            if (this.options.onElementSelected && data && data.elementInfo) {
+              this.options.onElementSelected(data.elementInfo)
+            }
+            break
+          case 'ELEMENT_HOVER':
+            // 检查 data 和 data.elementInfo 是否存在
+            if (this.options.onElementHover && data && data.elementInfo) {
+              this.options.onElementHover(data.elementInfo)
+            }
+            break
         }
-        break
-      case 'ELEMENT_HOVER':
-        if (this.options.onElementHover && data.elementInfo) {
-          this.options.onElementHover(data.elementInfo)
-        }
-        break
+      }
+    } catch (error) {
+      console.error('处理 iframe 消息失败：', error)
     }
   }
 
