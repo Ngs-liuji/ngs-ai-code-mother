@@ -40,3 +40,4 @@ build/
 
 ### VS Code ###
 .vscode/
+/ngs-ai-code-mother-frontend/ngs-ai-code-mother-frontend/.env.development

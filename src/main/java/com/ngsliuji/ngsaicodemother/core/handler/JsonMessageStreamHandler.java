@@ -59,23 +59,11 @@ public class JsonMessageStreamHandler {
                 })
                 .filter(StrUtil::isNotEmpty) // 过滤空字串
                 .doOnComplete(() -> {
-                    // 流式响应完成后，添加 AI 消息到对话历史
+                    // 流式响应完成后，仅添加 AI 消息到对话历史
                     String aiResponse = chatHistoryStringBuilder.toString();
-                    if (StrUtil.isNotBlank(aiResponse)) {
-                        try {
-                            chatHistoryService.addChatMessage(appId, aiResponse, ChatHistoryMessageTypeEnum.AI.getValue(), loginUser.getId());
-                            log.info("成功保存 AI 响应到对话历史，appId: {}, 内容长度：{}", appId, aiResponse.length());
-
-                            // 异步构造 Vue 项目
-                            String projectPath = AppConstant.CODE_OUTPUT_ROOT_DIR + "/vue_project_" + appId;
-                            vueProjectBuilder.buildProjectAsync(projectPath);
-                        } catch (Exception e) {
-                            log.error("保存 AI 响应到对话历史失败，appId: {}, error: {}", appId, e.getMessage(), e);
-                        }
-                    } else {
-                        log.warn("AI 响应内容为空，未保存到对话历史，appId: {}", appId);
-                    }
+                    chatHistoryService.addChatMessage(appId, aiResponse, ChatHistoryMessageTypeEnum.AI.getValue(), loginUser.getId());
                 })
+
                 .doOnError(error -> {
                     // 如果 AI 回复失败，也要记录错误消息
                     String errorMessage = "AI 回复失败：" + error.getMessage();

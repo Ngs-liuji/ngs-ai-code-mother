@@ -8,6 +8,8 @@ import com.ngsliuji.ngsaicodemother.ai.model.MultiFileCodeResult;
 import com.ngsliuji.ngsaicodemother.ai.model.message.AiResponseMessage;
 import com.ngsliuji.ngsaicodemother.ai.model.message.ToolExecutedMessage;
 import com.ngsliuji.ngsaicodemother.ai.model.message.ToolRequestMessage;
+import com.ngsliuji.ngsaicodemother.constant.AppConstant;
+import com.ngsliuji.ngsaicodemother.core.builder.VueProjectBuilder;
 import com.ngsliuji.ngsaicodemother.core.parser.CodeParserExecutor;
 import com.ngsliuji.ngsaicodemother.core.saver.CodeFileSaverExecutor;
 import com.ngsliuji.ngsaicodemother.exception.BusinessException;
@@ -34,7 +36,8 @@ public class AiCodeGeneratorFacade {
     @Resource
     private AiCodeGeneratorServiceFactory aiCodeGeneratorServiceFactory;
 
-
+    @Resource
+    private VueProjectBuilder vueProjectBuilder;
 
     /**
      * 统一入口：根据类型生成并保存代码（使用 appId）
@@ -90,7 +93,7 @@ public class AiCodeGeneratorFacade {
             }
             case VUE_PROJECT -> {
                 TokenStream tokenStream = aiCodeGeneratorService.generateVueProjectCodeStream(appId, userMessage);
-                yield processTokenStream(tokenStream);
+                yield processTokenStream(tokenStream,appId);
             }
             default -> {
                 String errorMessage = "不支持的生成类型：" + codeGenTypeEnum.getValue();
@@ -128,7 +131,7 @@ public class AiCodeGeneratorFacade {
 
 
 
-    private Flux<String> processTokenStream(TokenStream tokenStream) {
+    private Flux<String> processTokenStream(TokenStream tokenStream,Long appId) {
         return Flux.create(sink -> {
             log.info("开始创建 TokenStream，appId: {}", sink.currentContext().<Long>getOrEmpty("appId").orElse(0L));
 
@@ -154,6 +157,12 @@ public class AiCodeGeneratorFacade {
                         // 3. 继续推送工具执行结果（原有逻辑不变）
                         ToolExecutedMessage toolExecutedMessage = new ToolExecutedMessage(toolExecution);
                         sink.next(JSONUtil.toJsonStr(toolExecutedMessage));
+                    })
+                    .onCompleteResponse((ChatResponse response) -> {
+                        // 执行 Vue 项目构建（同步执行，确保预览时项目已就绪）
+                        String projectPath = AppConstant.CODE_OUTPUT_ROOT_DIR + File.separator + "vue_project_" + appId;
+                        vueProjectBuilder.buildProject(projectPath);
+                        sink.complete();
                     })
 
                     .onCompleteResponse((ChatResponse response) -> {
