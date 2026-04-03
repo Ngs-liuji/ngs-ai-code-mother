@@ -16,6 +16,7 @@ export default defineConfig({
     port: 5174, // 修改前端访问端口为 5174，vite默认端口为5173
     proxy: {
       '/api': {
+        // target: 'http://ngsai.2718065.xyz:8123',
         target: 'http://localhost:8123',
         changeOrigin: true,
         secure: false,

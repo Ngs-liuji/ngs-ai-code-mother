@@ -8,16 +8,16 @@
         <a-form-item label="头像" name="userAvatar">
           <div style="display: flex; align-items: center; gap: 16px">
             <AvatarUpload
-              :image-url="form.userAvatar"
-              :user-name="form.userName"
-              :size="96"
-              @update:image-url="handleAvatarUpdate"
-              @upload-success="handleAvatarUploadSuccess"
+                :image-url="form.userAvatar"
+                :user-name="form.userName"
+                :size="96"
+                @update:image-url="handleAvatarUpdate"
+                @upload-success="handleAvatarUploadSuccess"
             />
             <a-input
-              v-model:value="form.userAvatar"
-              placeholder="或输入头像 URL"
-              style="width: 400px"
+                v-model:value="form.userAvatar"
+                placeholder="或输入头像 URL"
+                style="width: 400px"
             />
           </div>
         </a-form-item>
@@ -96,13 +96,13 @@ const handleAvatarUploadSuccess = async (avatarUrl: string) => {
   try {
     // 更新表单中的头像 URL
     form.userAvatar = avatarUrl
-    
+
     // 调用用户信息更新接口
     const res = await updateUser({
       id: form.id,
       userAvatar: avatarUrl,
     })
-    
+
     if (res.data.code === 0) {
       message.success('头像已更新')
       // 更新登录用户信息

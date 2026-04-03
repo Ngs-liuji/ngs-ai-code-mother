@@ -12,12 +12,7 @@
       </a-col>
       <!-- 中间：导航菜单 -->
       <a-col flex="auto">
-        <a-menu
-          v-model:selectedKeys="selectedKeys"
-          mode="horizontal"
-          :items="menuItems"
-          @click="handleMenuClick"
-        />
+        <a-menu v-model:selectedKeys="selectedKeys" mode="horizontal" :items="menuItems" @click="handleMenuClick" />
       </a-col>
       <!-- 右侧：用户操作区域 -->
       <a-col>
@@ -30,6 +25,10 @@
               </a-space>
               <template #overlay>
                 <a-menu>
+                  <a-menu-item @click="goToProfile">
+                    <UserOutlined />
+                    个人信息
+                  </a-menu-item>
                   <a-menu-item @click="doLogout">
                     <LogoutOutlined />
                     退出登录
@@ -53,7 +52,7 @@ import { useRouter } from 'vue-router'
 import { type MenuProps, message } from 'ant-design-vue'
 import { useLoginUserStore } from '@/stores/loginUser.ts'
 import { userLogout } from '@/api/userController.ts'
-import { LogoutOutlined, HomeOutlined } from '@ant-design/icons-vue'
+import { LogoutOutlined, HomeOutlined, UserOutlined } from '@ant-design/icons-vue'
 
 const loginUserStore = useLoginUserStore()
 const router = useRouter()
@@ -82,11 +81,11 @@ const originItems = [
     label: '应用管理',
     title: '应用管理',
   },
-    {
-      key: 'others',
-      label: h('a', { href: 'https://www.2718065.xyz', target: '_blank' }, '鸟归沙的博客'),
-      title: '鸟归沙的博客',
-    },
+  {
+    key: 'others',
+    label: h('a', { href: 'https://www.2718065.xyz', target: '_blank' }, '鸟归沙的博客'),
+    title: '鸟归沙的博客',
+  },
 ]
 
 // 过滤菜单项
@@ -114,6 +113,11 @@ const handleMenuClick: MenuProps['onClick'] = (e) => {
   if (key.startsWith('/')) {
     router.push(key)
   }
+}
+
+// 跳转到个人信息页面
+const goToProfile = () => {
+  router.push('/user/profile')
 }
 
 // 退出登录

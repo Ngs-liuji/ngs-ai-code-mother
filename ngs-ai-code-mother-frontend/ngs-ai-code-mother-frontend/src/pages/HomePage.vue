@@ -132,7 +132,9 @@ const viewWork = (app: API.AppVO) => {
 // 格式化时间函数已移除，不再需要显示创建时间
 
 // 页面加载时获取数据
-onMounted(() => {
+onMounted(async () => {
+  // 先获取用户信息，确保登录状态是最新的
+  await loginUserStore.fetchLoginUser()
   loadMyApps()
   loadFeaturedApps()
 
@@ -204,7 +206,12 @@ onMounted(() => {
 
       <!-- 我的作品 -->
       <div class="section">
-        <h2 class="section-title">我的作品</h2>
+        <div class="section-header">
+          <h2 class="section-title">我的作品</h2>
+          <a-button type="text" @click="loadMyApps">
+            刷新
+          </a-button>
+        </div>
         <div class="app-grid">
           <AppCard v-for="app in myApps" :key="app.id" :app="app" @view-chat="viewChat" @view-work="viewWork" />
         </div>
@@ -217,7 +224,12 @@ onMounted(() => {
 
       <!-- 精选案例 -->
       <div class="section">
-        <h2 class="section-title">精选案例</h2>
+        <div class="section-header">
+          <h2 class="section-title">精选案例</h2>
+          <a-button type="text" @click="loadFeaturedApps">
+            刷新
+          </a-button>
+        </div>
         <div class="featured-grid">
           <AppCard v-for="app in featuredApps" :key="app.id" :app="app" :featured="true" @view-chat="viewChat"
             @view-work="viewWork" />
@@ -486,11 +498,38 @@ onMounted(() => {
   margin-bottom: 60px;
 }
 
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
 .section-title {
   font-size: 32px;
   font-weight: 600;
-  margin-bottom: 32px;
+  margin: 0;
   color: #1e293b;
+}
+
+/* 刷新按钮样式 */
+.section-header .ant-btn {
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 14px;
+  transition: all 0.3s;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  color: #475569;
+  backdrop-filter: blur(15px);
+}
+
+.section-header .ant-btn:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(59, 130, 246, 0.4);
+  color: #3b82f6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
 }
 
 /* 我的作品网格 */

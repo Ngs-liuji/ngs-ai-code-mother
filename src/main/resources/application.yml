@@ -62,6 +62,8 @@ springdoc:
 # knife4j
 knife4j:
   enable: true
+  username: root
+  password: root
   setting:
     language: zh_cn
 

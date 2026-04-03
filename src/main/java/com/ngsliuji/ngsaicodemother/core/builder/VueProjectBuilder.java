@@ -291,40 +291,12 @@ public class VueProjectBuilder {
             return false;
         }
     }
-//    /**
-//     * 执行 npm install 命令
-//     */
-//    private boolean executeNpmInstall(File projectDir) {
-//        log.info("执行 npm install...");
-//        return executeCommand(projectDir, "npm install", 300); // 5分钟超时
-//    }
-//
-//    /**
-//     * 执行 npm run build 命令
-//     */
-//    private boolean executeNpmBuild(File projectDir) {
-//        log.info("执行 npm run build...");
-//        return executeCommand(projectDir, "npm run build", 180); // 3分钟超时
-//    }
-//    如果是 Windows 系统，命令需要添加 .cmd。
-//    编写操作系统检测方法：
-    private boolean isWindows() {
-        return System.getProperty("os.name").toLowerCase().contains("windows");
-    }
-
-    private String buildCommand(String baseCommand) {
-        if (isWindows()) {
-            return baseCommand + ".cmd";
-        }
-        return baseCommand;
-    }
     /**
      * 执行 npm install 命令
      */
     private boolean executeNpmInstall(File projectDir) {
         log.info("执行 npm install...");
-        String command = String.format("%s install", buildCommand("npm"));
-        return executeCommand(projectDir, command, 300); // 5分钟超时
+        return executeCommand(projectDir, "npm install", 300); // 5分钟超时
     }
 
     /**
@@ -332,8 +304,36 @@ public class VueProjectBuilder {
      */
     private boolean executeNpmBuild(File projectDir) {
         log.info("执行 npm run build...");
-        String command = String.format("%s run build", buildCommand("npm"));
-        return executeCommand(projectDir, command, 180); // 3分钟超时
+        return executeCommand(projectDir, "npm run build", 180); // 3分钟超时
     }
+//    如果是 Windows 系统，命令需要添加 .cmd。
+//    编写操作系统检测方法：
+//    private boolean isWindows() {
+//        return System.getProperty("os.name").toLowerCase().contains("windows");
+//    }
+//
+//    private String buildCommand(String baseCommand) {
+//        if (isWindows()) {
+//            return baseCommand + ".cmd";
+//        }
+//        return baseCommand;
+//    }
+//    /**
+//     * 执行 npm install 命令
+//     */
+//    private boolean executeNpmInstall(File projectDir) {
+//        log.info("执行 npm install...");
+//        String command = String.format("%s install", buildCommand("npm"));
+//        return executeCommand(projectDir, command, 300); // 5分钟超时
+//    }
+//
+//    /**
+//     * 执行 npm run build 命令
+//     */
+//    private boolean executeNpmBuild(File projectDir) {
+//        log.info("执行 npm run build...");
+//        String command = String.format("%s run build", buildCommand("npm"));
+//        return executeCommand(projectDir, command, 180); // 3分钟超时
+//    }
 
 }

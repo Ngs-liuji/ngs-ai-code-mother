@@ -14,12 +14,7 @@
     </a-form>
     <a-divider />
     <!-- 表格 -->
-    <a-table
-      :columns="columns"
-      :data-source="data"
-      :pagination="pagination"
-      @change="doTableChange"
-    >
+    <a-table :columns="columns" :data-source="data" :pagination="pagination" @change="doTableChange">
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'userAvatar'">
           <a-image :src="record.userAvatar" :width="120" />
@@ -36,17 +31,48 @@
           {{ dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss') }}
         </template>
         <template v-else-if="column.key === 'action'">
+          <a-button type="primary" style="margin-right: 8px" @click="doEdit(record)">修改</a-button>
           <a-button danger @click="doDelete(record.id)">删除</a-button>
         </template>
       </template>
     </a-table>
+
+    <!-- 修改用户信息模态框 -->
+    <a-modal v-model:visible="editModalVisible" title="修改用户信息" width="600px">
+      <a-form :model="editForm" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
+        <a-form-item label="用户名" name="userName" :rules="[{ required: true, message: '请输入用户名' }]">
+          <a-input v-model:value="editForm.userName" placeholder="请输入用户名" />
+        </a-form-item>
+        <a-form-item label="头像" name="userAvatar">
+          <div style="display: flex; align-items: center; gap: 16px">
+            <AvatarUpload :image-url="editForm.userAvatar" :user-name="editForm.userName" :size="96"
+              @update:image-url="handleEditAvatarUpdate" @upload-success="handleEditAvatarUploadSuccess" />
+            <a-input v-model:value="editForm.userAvatar" placeholder="或输入头像 URL" style="width: 300px" />
+          </div>
+        </a-form-item>
+        <a-form-item label="简介" name="userProfile">
+          <a-textarea v-model:value="editForm.userProfile" placeholder="请输入个人简介" :rows="4" />
+        </a-form-item>
+        <a-form-item label="用户角色" name="userRole" :rules="[{ required: true, message: '请选择用户角色' }]">
+          <a-select v-model:value="editForm.userRole" placeholder="请选择用户角色">
+            <a-select-option value="user">普通用户</a-select-option>
+            <a-select-option value="admin">管理员</a-select-option>
+          </a-select>
+        </a-form-item>
+      </a-form>
+      <template #footer>
+        <a-button @click="editModalVisible = false">取消</a-button>
+        <a-button type="primary" @click="handleEditSubmit">确定</a-button>
+      </template>
+    </a-modal>
   </div>
 </template>
 <script lang="ts" setup>
 import { computed, onMounted, reactive, ref } from 'vue'
-import { deleteUser, listUserVoByPage } from '@/api/userController.ts'
+import { deleteUser, listUserVoByPage, adminUpdateUser, uploadUserAvatar } from '@/api/userController.ts'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
+import AvatarUpload from '@/components/AvatarUpload.vue'
 
 const columns = [
   {
@@ -143,6 +169,81 @@ const doDelete = async (id: number) => {
     fetchData()
   } else {
     message.error('删除失败')
+  }
+}
+
+// 编辑模态框
+const editModalVisible = ref(false)
+
+// 编辑表单数据
+const editForm = reactive({
+  id: 0,
+  userName: '',
+  userAvatar: '',
+  userProfile: '',
+  userRole: '',
+})
+
+// 打开编辑模态框
+const doEdit = (record: API.UserVO) => {
+  // 填充表单数据
+  editForm.id = record.id || 0
+  editForm.userName = record.userName || ''
+  editForm.userAvatar = record.userAvatar || ''
+  editForm.userProfile = record.userProfile || ''
+  editForm.userRole = record.userRole || 'user'
+
+  // 显示模态框
+  editModalVisible.value = true
+}
+
+// 处理头像更新
+const handleEditAvatarUpdate = (url: string) => {
+  editForm.userAvatar = url
+}
+
+/**
+ * 处理编辑模态框中头像上传成功，自动调用更新接口
+ */
+const handleEditAvatarUploadSuccess = async (avatarUrl: string) => {
+  try {
+    // 更新表单中的头像 URL
+    editForm.userAvatar = avatarUrl
+
+    // 调用管理员更新用户信息接口
+    const res = await adminUpdateUser({
+      id: editForm.id,
+      userAvatar: avatarUrl,
+    })
+
+    if (res.data.code === 0) {
+      message.success('头像已更新')
+      // 刷新列表数据
+      fetchData()
+    } else {
+      message.error('更新失败：' + res.data.message)
+    }
+  } catch (error) {
+    console.error('更新头像失败：', error)
+    message.error('更新失败，请重试')
+  }
+}
+
+// 处理修改用户信息提交
+const handleEditSubmit = async () => {
+  try {
+    const res = await adminUpdateUser(editForm)
+    if (res.data.code === 0) {
+      message.success('修改成功')
+      editModalVisible.value = false
+      // 刷新数据
+      fetchData()
+    } else {
+      message.error('修改失败：' + res.data.message)
+    }
+  } catch (error) {
+    console.error('修改用户信息失败：', error)
+    message.error('修改失败，请重试')
   }
 }
 
